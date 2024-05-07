@@ -10,11 +10,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    firstName: {
-        type: String,
-        default: ''
-    },
-    lastName: {
+    // empid: {
+    //     type: Object,
+    //     default: ''
+    // },
+    name: {
         type: String,
         default: ''
     },
@@ -22,8 +22,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    phone: {
-        type: String,
+    // aadhaar: {
+    //     type: Number,
+    //     default: ''
+    // },
+    Phone:{
+        type : Number,
         default: ''
     },
     avatar: {

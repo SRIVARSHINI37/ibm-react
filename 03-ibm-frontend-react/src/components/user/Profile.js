@@ -11,10 +11,10 @@ const Profile = () => {
             {userData && (
                 <div>
                     <p>Username: {userData.username}</p>
-                    <p>Fist name: {userData.firstName}</p>
-                    <p>Last Name: {userData.lastName}</p>
-                    <p>Phone: {userData.phone}</p>
+                    <p>Name: {userData.name}</p>
                     <p>Email: {userData.email}</p>
+                    <p>Aadhar: {userData.aadhaar}</p>
+                    <p>Salary: {userData.salary}</p>
                     {userData.avatar && <img width={'300px'} src={userData.avatar} alt="Avatar" />}
                 </div>
             )}

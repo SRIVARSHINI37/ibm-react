@@ -1,136 +1,127 @@
+import React, { useState } from "react";
 import axios from "axios";
-import { useState } from "react";
 
-const AddEmployee = () => {
-    const backendUrl = 'https://jsonplaceholder.typicode.com/users';
-    const [empData, setEmpData] = useState({ firstName: '', email: '', aadhaar: '', salary: '' });
+const AddEmp = () => {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        aadhaar: '',
+        salary: ''
+    });
     const [errors, setErrors] = useState({});
-
     const handleChange = (evt) => {
-        setEmpData({ ...empData, [evt.target.name]: evt.target.value });
-        setErrors({ ...errors, [evt.target.name]: '' });
+       setFormData({
+        ...formData,
+        [evt.target.name] : evt.target.value
+       });
+       
     };
 
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors = {};
-
-        if (!empData.firstName.trim()) {
-            newErrors.firstName = "First name is required";
-            isValid = false;
-        }
-
-        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(empData.email)) {
-            newErrors.email = "Invalid email address";
-            isValid = false;
-        }
-
-        if (!/^\d{12}$/.test(empData.aadhaar)) {
-            newErrors.aadhaar = "Aadhaar must be a 12-digit number";
-            isValid = false;
-        }
-
-        if (empData.salary <= 0 || isNaN(empData.salary)) {
-            newErrors.salary = "Salary must be a positive number";
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
-    };
-
-    const handleSubmit = (evt) => {
-        evt.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault();
         if (validateForm()) {
-            axios.post(backendUrl, empData)
-                .then((resp) => {
-                    alert(`${resp.data.firstName} with id ${resp.data.id} added successfully!`);
-                    setEmpData({ firstName: '', email: '', aadhaar: '', salary: '' });
+            axios.post('http://localhost:9090/emp/add-emp', formData)
+                .then((res) => {
+                    console.log(res.data);
+                    alert('Employee added successfully!');
                 })
-                .catch(error => {
-                    console.error("Error adding employee:", error);
+                .catch((error) => {
+                    console.error('Error adding employee:', error);
+                    alert('Error adding employee. Please try again later.');
                 });
         }
     };
 
+    const validateForm = () => {
+        let errors = {};
+        let isValid = true;
+
+        if(formData.name.length<3 || formData.name.length>15){
+            errors.name = 'Name should be between 4 to 15 characters'
+            isValid = false;
+        }
+        // Validate Aadhaar
+        if (!/^\d{12}$/.test(formData.aadhaar)) {
+            errors.aadhaar = 'Aadhaar must be a 12-digit number';
+            isValid = false;
+        }
+
+        // Validate Email
+        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            errors.email = 'Invalid email address';
+            isValid = false;
+        }
+        if((formData.salary)<0){
+            errors.salary = 'Salary cant be negative';
+            isValid = false;
+        }
+        setErrors(errors);
+        return isValid;
+    };
+
     return (
         <>
-            <h1>Add Employee Component</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="firstName">First Name:</label>
-                <input type="text" id="firstName" name="firstName" value={empData.firstName} onChange={handleChange} placeholder="Enter first name" required autoFocus />
-                {errors.firstName && <span className="error">{errors.firstName}</span>}
-                <br />
-                <label htmlFor="email">Email:</label>
-                <input type="email" id="email" name="email" value={empData.email} onChange={handleChange} placeholder="Enter email" />
-                {errors.email && <span className="error">{errors.email}</span>}
-                <br />
-                <label htmlFor="aadhaar">Aadhaar:</label>
-                <input type="number" id="aadhaar" name="aadhaar" value={empData.aadhaar} onChange={handleChange} placeholder="Enter aadhaar" />
-                {errors.aadhaar && <span className="error">{errors.aadhaar}</span>}
-                <br />
-                <label htmlFor="salary">Salary:</label>
-                <input type="number" id="salary" name="salary" value={empData.salary} onChange={handleChange} placeholder="Enter salary" />
-                {errors.salary && <span className="error">{errors.salary}</span>}
-                <br />
-                <input type="submit" value="Add Employee" />
-            </form>
+        <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+        <h3>Add Employee</h3>
+          <form onSubmit={handleSubmit} className="needs-validation">
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">Name:</label>
+              <input 
+                type="text" 
+                name="name" 
+                value={formData.name} 
+                onChange={handleChange} 
+                className={`form-control ${errors.name ? 'is-invalid' : ''}`} 
+                required 
+                autoFocus 
+              />
+              {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email:</label>
+              <input 
+                type="email" 
+                name="email" 
+                value={formData.email} 
+                onChange={handleChange} 
+                className={`form-control ${errors.email ? 'is-invalid' : ''}`} 
+                required 
+              />
+              {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="aadhaar" className="form-label">Aadhaar:</label>
+              <input 
+                type="text" 
+                name="aadhaar" 
+                value={formData.aadhaar} 
+                onChange={handleChange} 
+                className={`form-control ${errors.aadhaar ? 'is-invalid' : ''}`} 
+                required 
+              />
+              {errors.aadhaar && <div className="invalid-feedback">{errors.aadhaar}</div>}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="salary" className="form-label">Salary:</label>
+              <input 
+                type="text" 
+                name="salary" 
+                value={formData.salary} 
+                onChange={handleChange} 
+                className={`form-control ${errors.salary ? 'is-invalid' : ''}`} 
+                required 
+              />
+              {errors.salary && <div className="invalid-feedback">{errors.salary}</div>}
+            </div>
+            <button type="submit" className="btn btn-primary">Add Employee</button>
+          </form>
+        </div>
+      </div>
+    </div>
         </>
     );
 };
 
-export default AddEmployee;
-
-// import axios from "axios";
-// import { useState } from "react";
-
-// const AddEmployee = () => {
-
-//     const backendUrl = 'https://jsonplaceholder.typicode.com/users';
-//     const [empData, setEmpData] = useState({ firstName: '', email: '', aadhaar: '', salary: '' });
-
-//     const handleChange = (evt) => {
-//         console.log(evt.target);
-//         setEmpData({ ...empData, [evt.target.name]: evt.target.value });
-//     };
-
-//     const handleSubmit = (evt) => {
-//         evt.preventDefault();
-//         console.log(empData);
-//         axios.post(backendUrl, empData)
-//             .then((resp) => {
-//                 console.log(resp.data);
-//                 alert(`${resp.data.firstName} with id ${resp.data.id} added successfully!`);
-//                 setEmpData({ firstName: '', email: '', aadhaar: '', salary: '' });
-//             });
-//     };
-
-//     return (
-//         <>
-//             <h1>Add Employee Component</h1>
-//             <form onSubmit={handleSubmit} >
-//                 <label htmlFor="firstName">First Name:</label>
-//                 <input type="text" id="firstName" name="firstName" value={empData.firstName} onChange={handleChange} placeholder="Enter first name" required autoFocus />
-//                 <br />
-//                 <label htmlFor="email">Email:</label>
-//                 <input type="email" id="email" name="email" value={empData.email} onChange={handleChange} placeholder="Enter email" />
-//                 <br />
-//                 <label htmlFor="aadhaar">Aadhaar:</label>
-//                 <input type="number" id="aadhaar" name="aadhaar" value={empData.aadhaar} onChange={handleChange} placeholder="Enter aadhaar" />
-//                 <br />
-//                 <label htmlFor="salary">Salary:</label>
-//                 <input type="number" id="salary" name="salary" value={empData.salary} onChange={handleChange} placeholder="Enter salary" />
-//                 <br />
-//                 <input type="submit" value="Add Employee" />
-//             </form>
-//         </>
-//     );
-// };
-
-// export default AddEmployee;
-
-
-
-
-
-
+export default AddEmp;

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Routes} from "react-router-dom";
 import Login from "../user/Login";
 import Parent from "../other/Parent";
 import Employee from '../employee/Employee';

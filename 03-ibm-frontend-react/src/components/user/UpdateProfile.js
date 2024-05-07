@@ -41,20 +41,20 @@ const UpdateProfile = () => {
         <>
             <h1>Update Your Profile</h1>
             <form onSubmit={handleSubmit}>
-                <label>First Name:</label>
-                <input type="text" name="firstName" value={formData.firstName}
+                <label>Name:</label>
+                <input type="text" name="name" value={formData.name}
                     onChange={handleChange} autoFocus required />
-                <br />
-                <label>Last Name:</label>
-                <input type="text" name="lastName" value={formData.lastName}
-                    onChange={handleChange} required />
-                <br />
-                <label>Phone:</label>
-                <input type="number" name="phone" value={formData.phone}
-                    onChange={handleChange} required />
                 <br />
                 <label>Email:</label>
                 <input type="email" name="email" value={formData.email}
+                    onChange={handleChange} required />
+                <br />
+                <label>Aadhar:</label>
+                <input type="number" name="aadhaar" value={formData.aadhaar}
+                    onChange={handleChange} required />
+                <br />
+                <label>Salary:</label>
+                <input type="number" name="salary" value={formData.salary}
                     onChange={handleChange} required />
                 <br />
                 <label>Avatar:</label>
